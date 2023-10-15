@@ -20,6 +20,8 @@ class PxFont:
                 self.font['.'] = self.font_images[char]
             elif char == 'pipe':
                 self.font['|'] = self.font_images[char]
+            elif char == 'slash':
+                self.font['/'] = self.font_images[char]
             else:
                 self.font[char] = self.font_images[char]
 
@@ -56,3 +58,23 @@ class PxFont:
                 surface.blit(char, pos_copy)
             
             pos_copy[0] += char_w + x_off
+
+    def get_center(self, text) -> tuple[float, float]:
+        x = 0
+        y = 0
+        x_off = 1
+
+        for i in enumerate(text):
+            char = self.font[i[1].lower()][0]
+            char_w = char.get_width()
+            char_h = char.get_height()
+
+            if i[0] < len(text)-1:
+                x += char_w + x_off
+            else:
+                x += char_w
+
+            if char_h > y:
+                y = char_h
+
+        return (x/2, y/2)

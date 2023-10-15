@@ -43,7 +43,7 @@ class PgEditor:
         self.map_manager_w = self.canvas_size[0]-self.asset_manager_w
         self.map_manager_h = self.canvas_size[1]-self.toolbar_h
         self.map_manager_size = (self.map_manager_w, self.map_manager_h)
-        self.map_manager = EditorMapManager(self.map_manager_size, self.asset_manager_w, self.toolbar_h)
+        self.map_manager = EditorMapManager(self.map_manager_size, self.asset_manager_w, self.toolbar_h, self.font)
     
     def run(self) -> None:
         while self.running:
@@ -104,7 +104,7 @@ class PgEditor:
         # update objects
         self.toolbar.update()
         self.asset_manager.update(self.mouse.data)
-        self.map_manager.update(self.keyboard.data)
+        self.map_manager.update(self.mouse.data, self.keyboard.data, self.asset_manager.get_data())
         self.mouse.reset_click_status()
 
     def render(self) -> None:

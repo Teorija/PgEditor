@@ -1,21 +1,19 @@
 from const import COLOURS
 import pygame as pg
+from utils import load_images
 
 class PgUiElement:
     def __init__(self, size, pos, surface) -> None:
         self.size = size
         self.pos = pos
         self.surface = surface
-
-    def update(self) -> None:
-        pass
-
-    def render(self) -> None:
-        pass
+        self.selected = 0
+        self.hovering = 0
 
 class TextButton(PgUiElement):
     def __init__(self, size, pos, surface, text, font) -> None:
         super().__init__(size, pos, surface)
+        self.type = 'text button'
         self.button_surface = pg.Surface(size).convert()
         self.button_surface.fill(COLOURS['transparent black'])
         self.button_surface.set_colorkey(COLOURS['transparent black'])
@@ -23,8 +21,6 @@ class TextButton(PgUiElement):
         self.text = text
         self.text_pos = pos
         self.font = font
-        self.selected = 0
-        self.hovering = 0
     
     def render(self) -> None:
         self.text_pos = self.pos
@@ -39,8 +35,20 @@ class TextButton(PgUiElement):
         self.surface.blit(self.button_surface, self.text_pos)
 
 class ImageButton(PgUiElement):
-    def __init__(self, size, pos, surface) -> None:
+    # to do : add hover image
+    def __init__(self, size, pos, surface, image, hover_image) -> None:
         super().__init__(size, pos, surface)
+        self.type = 'image button'
+        self.hover_image = hover_image
+        self.button_image = image[0]
+        self.button_rect = image[1]
+        self.button_rect.topleft = pos
+        self.button_pos = pos
 
     def render(self) -> None:
-        pass
+        self.button_pos = self.pos
+
+        if self.hovering:
+            self.surface.blit(self.hover_image[0], self.button_pos)
+        else:
+            self.surface.blit(self.button_image, self.button_pos)
