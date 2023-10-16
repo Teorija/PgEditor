@@ -14,7 +14,7 @@ class EditorMapManager:
         self.font = font
         
         # map variables
-        self.scroll_speed = 9
+        self.scroll_speed = 3
         self.scroll_offset = [0,0]
         self.display_grid = 0
 

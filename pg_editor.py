@@ -14,7 +14,7 @@ class PgEditor:
     def __init__(self, screen_size=(1280, 720), canvas_size=(640, 360)) -> None:
         pg.init()
         pg.event.set_allowed([pg.QUIT, pg.KEYDOWN, pg.KEYUP, pg.MOUSEBUTTONDOWN, pg.MOUSEBUTTONUP])
-        pg.display.set_caption("Pygame Core")
+        pg.display.set_caption("Pygame 2D Pixel Art Map Editor")
         self.screen_size = screen_size
         self.screen = pg.display.set_mode(screen_size)
         self.canvas_size = canvas_size
@@ -33,7 +33,7 @@ class PgEditor:
         self.toolbar_w = self.canvas_size[0]
         self.toolbar_h = self.canvas_size[1]/15
         self.toolbar_size = (self.toolbar_w, self.toolbar_h)
-        self.toolbar = EditorToolbar(self.toolbar_size)
+        self.toolbar = EditorToolbar(self.toolbar_size, self.font)
 
         self.asset_manager_w = self.canvas_size[0]/5
         self.asset_manager_h = self.canvas_size[1]-self.toolbar_h

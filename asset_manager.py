@@ -26,7 +26,7 @@ class EditorAssetManager:
         self.current_asset_outline = None
 
         # general elements
-        self.ui_icons = load_images('assets/icons/')
+        self.ui_icons = load_images('assets/icons/asset manager/')
         self.assets = {}
         self.ui_elements = {}
         self.init_assets()

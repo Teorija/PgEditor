@@ -35,8 +35,7 @@ class TextButton(PgUiElement):
         self.surface.blit(self.button_surface, self.text_pos)
 
 class ImageButton(PgUiElement):
-    # to do : add hover image
-    def __init__(self, size, pos, surface, image, hover_image) -> None:
+    def __init__(self, size, pos, surface, image, hover_image=None) -> None:
         super().__init__(size, pos, surface)
         self.type = 'image button'
         self.hover_image = hover_image
@@ -48,7 +47,7 @@ class ImageButton(PgUiElement):
     def render(self) -> None:
         self.button_pos = self.pos
 
-        if self.hovering:
+        if self.hovering and self.hover_image:
             self.surface.blit(self.hover_image[0], self.button_pos)
         else:
             self.surface.blit(self.button_image, self.button_pos)
