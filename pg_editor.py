@@ -43,7 +43,8 @@ class PgEditor:
         self.map_manager_w = self.canvas_size[0]-self.asset_manager_w
         self.map_manager_h = self.canvas_size[1]-self.toolbar_h
         self.map_manager_size = (self.map_manager_w, self.map_manager_h)
-        self.map_manager = EditorMapManager(self.map_manager_size, self.asset_manager_w, self.toolbar_h, self.font)
+        self.map_size = (640, 352)
+        self.map_manager = EditorMapManager(self.map_manager_size, self.map_size, self.asset_manager_w, self.toolbar_h, self.font)
     
     def run(self) -> None:
         while self.running:
@@ -99,12 +100,12 @@ class PgEditor:
                         self.keyboard.data['arrow keys']['down'] = 0
 
     def update(self) -> None:
-        self.canvas.fill(COLOURS['black']) # wipe canvas for new frame
+        self.canvas.fill(COLOURS['blue 3']) # wipe canvas for new frame
         
         # update objects
-        self.toolbar.update()
+        self.toolbar.update(self.mouse.data, self.keyboard.data)
         self.asset_manager.update(self.mouse.data)
-        self.map_manager.update(self.mouse.data, self.keyboard.data, self.asset_manager.get_data())
+        self.map_manager.update(self.mouse.data, self.keyboard.data, self.asset_manager.get_data(), self.toolbar.get_data())
         self.mouse.reset_click_status()
 
     def render(self) -> None:

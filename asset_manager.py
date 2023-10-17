@@ -100,6 +100,10 @@ class EditorAssetManager:
 
         # handle ui element interaction
         for elem in self.ui_elements:
+            if mouse_data['pos'][0] > self.surface_size[0] or mouse_data['pos'][1] < self.blit_pos[1]:
+                self.ui_elements[elem].hovering = 0
+                return
+
             # handle collision between button and mouse
             if not self.ui_elements[elem].button_rect.collidepoint(mouse_pos):
                 self.ui_elements[elem].hovering = 0
