@@ -34,3 +34,4 @@ future improvements
 - optimize rendering so that a frame is only rendered when there is a difference between the current frame and last frame
 - UI overhaul
 - add the ability to have and select sub folders within an asset folder
+- add keyboard shortcuts for current tools
