@@ -6,7 +6,7 @@ import json
 class EditorMapManager:
     def __init__(self, surface_size, map_size, blit_off_x, blit_off_y, font) -> None:
         self.surface_size = surface_size
-        self.map_surface = pg.Surface(surface_size).convert()
+        self.map_surface = pg.Surface(map_size).convert()
         self.hud_surface = pg.Surface(surface_size).convert()
         self.hud_surface.set_colorkey(COLOURS['transparent black'])
         self.blit_pos = (blit_off_x, blit_off_y)
@@ -23,9 +23,12 @@ class EditorMapManager:
         self.scroll_offset = [0,0]
         self.display_grid = 0
         self.mouse_pos = None
+        self.drawing = 0
+        self.erasing = 0
 
         # hud variables
         self.hud_render_status = 1
+        self.current_folder = None
         self.current_asset = None
         self.current_layer = 0
         self.layer_count = 0
@@ -34,28 +37,39 @@ class EditorMapManager:
         
     def update(self, mouse_data, keyboard_data, asset_manager_data, toolbar_data) -> None:
         # update mouse data
-        self.mouse_pos = mouse_data['pos']
+        mouse_x = ((mouse_data['pos'][0] - self.blit_pos[0] - self.scroll_offset[0])/self.zoom_scale)//16
+        mouse_y = ((mouse_data['pos'][1] - self.blit_pos[1] - self.scroll_offset[1])/self.zoom_scale)//16
+        self.mouse_pos = (mouse_x, mouse_y)
+
+        # update toolbar data
+        self.current_layer = toolbar_data['current layer']
+        self.layer_count = toolbar_data['layer count']
 
         # update asset manager data
         self.current_asset = asset_manager_data['current asset']
+        self.current_folder = asset_manager_data['current folder']
 
         # update hud
         self.update_hud(toolbar_data)
 
         # update hud
-        self.update_map(mouse_data, keyboard_data, toolbar_data)
+        self.update_map(mouse_data, keyboard_data, toolbar_data, asset_manager_data)
 
     def update_hud(self, toolbar_data) -> None:
         # wipe surface for new frame
         self.hud_surface.fill(COLOURS['transparent black'])
 
-        # update hud variables
-        self.current_layer = toolbar_data['current layer']
-        self.layer_count = toolbar_data['layer count']
-
-    def update_map(self, mouse_data, keyboard_data, toolbar_data) -> None:
+    def update_map(self, mouse_data, keyboard_data, toolbar_data, asset_manager_data) -> None:
         # wipe surface for new frame
         self.map_surface.fill(COLOURS['red 2'])
+
+        # handle mouse position for drawing/erasing features
+        if mouse_data['pos'][0] > self.blit_pos[0] and mouse_data['pos'][1] > self.blit_pos[1]:
+            # handle map drawing
+            if toolbar_data['drawing'] and mouse_data['l_clicking'] and self.current_layer != 0 and self.current_asset:
+                self.map.add_tile(self.mouse_pos, self.current_layer, self.current_folder, self.current_asset[0], self.current_asset[1][0])
+            
+            # handle map erasing
 
         # handle grid display
         if self.display_grid != toolbar_data['grid status']:
@@ -64,6 +78,18 @@ class EditorMapManager:
         # handle map pos reset
         if toolbar_data['reset status']:
             self.scroll_offset = [0,0]
+
+        # handle map clear
+        if toolbar_data['clear status']:
+            self.map.clear_map()
+
+        # handle new layer added
+        if toolbar_data['new layer status']:
+            self.map.add_layer(self.layer_count)
+
+        # handle layer deletion
+        if toolbar_data['delete layer status']:
+            self.map.remove_layer(self.current_layer, self.layer_count)
 
         # handle map zoom in and out
         if self.zoom_scale != toolbar_data['zoom scale']:
@@ -94,13 +120,13 @@ class EditorMapManager:
             return
 
         # render hud map elements
-        mouse_pos_text = str(self.mouse_pos)
-        mouse_pos_text_center = self.font.get_center(mouse_pos_text)
-        self.font.write(self.hud_surface, str(self.mouse_pos), [self.surface_size[0] - (mouse_pos_text_center[0]*2) - 6, 3], shadow=1)
-
         current_layer_text = 'layer ' + str(self.current_layer) + '/' + str(self.layer_count)
         current_layer_text_center = self.font.get_center(current_layer_text)
-        self.font.write(self.hud_surface, current_layer_text, [self.surface_size[0] - (current_layer_text_center[0]*2) - 6, 18], shadow=1)
+        self.font.write(self.hud_surface, current_layer_text, [self.surface_size[0] - (current_layer_text_center[0]*2) - 6, 15], shadow=1)
+
+        mouse_pos_text = '(x, y) : (' + str(self.mouse_pos[0]) + ', ' + str(self.mouse_pos[1]) + ')'
+        mouse_pos_text_center = self.font.get_center(mouse_pos_text)
+        self.font.write(self.hud_surface, mouse_pos_text, [self.surface_size[0] - (mouse_pos_text_center[0]*2) - 6, 3], shadow=1)
 
         # render current selected asset
         if self.current_asset:
@@ -116,6 +142,8 @@ class EditorMapManager:
         # render grid
         if self.display_grid:
             self.render_grid()
+
+        self.map.render(self.map_surface)
 
         # render map to main surface
         surface.blit(pg.transform.scale_by(self.map_surface, self.zoom_scale), (self.blit_pos[0]+self.scroll_offset[0], self.blit_pos[1]+self.scroll_offset[1]))

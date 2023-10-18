@@ -235,5 +235,6 @@ class EditorAssetManager:
 
     def get_data(self) -> dict:
         return {
+                'current folder' : self.current_folder,
                 'current asset': self.current_asset
                }

@@ -103,7 +103,7 @@ class PgEditor:
         self.canvas.fill(COLOURS['blue 3']) # wipe canvas for new frame
         
         # update objects
-        self.toolbar.update(self.mouse.data, self.keyboard.data)
+        self.toolbar.update(self.mouse.data)
         self.asset_manager.update(self.mouse.data)
         self.map_manager.update(self.mouse.data, self.keyboard.data, self.asset_manager.get_data(), self.toolbar.get_data())
         self.mouse.reset_click_status()

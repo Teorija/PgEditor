@@ -28,7 +28,10 @@ class EditorToolbar:
         self.grid_status = 0
         self.drag_status = 0
         self.reset_status = 0
+        self.clear_status = 0
         self.current_zoom_scale = 1
+        self.new_layer_status = 0
+        self.delete_layer_status = 0
         self.current_layer = 0
         self.layer_count = 0
         self.current_tool = 'none'
@@ -54,11 +57,11 @@ class EditorToolbar:
         self.ui_elements['layer down'] = ImageButton(button_size, (self.surface_size[0]-(button_size[0]+off_x)*2, y_pos), self.toolbar_surface, self.ui_icons['layer down'], self.ui_icons['layer down hover'])
         self.ui_elements['layer up'] = ImageButton(button_size, (self.surface_size[0]-button_size[0]-off_x, y_pos), self.toolbar_surface, self.ui_icons['layer up'], self.ui_icons['layer up hover'])
 
-    def update(self, mouse_data, keyboard_data) -> None:
+    def update(self, mouse_data) -> None:
         self.toolbar_surface.fill(COLOURS['gray'])
-        self.update_ui_elements(mouse_data, keyboard_data)
+        self.update_ui_elements(mouse_data)
 
-    def update_ui_elements(self, mouse_data, keyboard_data) -> None:
+    def update_ui_elements(self, mouse_data) -> None:
         mouse_pos = mouse_data['pos']
 
         for elem in self.ui_elements:
@@ -71,6 +74,9 @@ class EditorToolbar:
 
             self.ui_elements[elem].hovering = 1
             self.reset_status = 0
+            self.clear_status = 0
+            self.new_layer_status = 0
+            self.delete_layer_status = 0
 
             if not mouse_data['l_click']:
                 continue
@@ -103,6 +109,11 @@ class EditorToolbar:
             if elem == 'reset':
                 self.reset_status = 1
 
+            if elem == 'clear':
+                self.clear_status = 1
+                self.current_layer = 0
+                self.layer_count = 0
+
             if elem == 'drag' and not self.drag_status:
                 self.drag_status = 1
                 self.ui_elements[elem].selected = 1
@@ -118,10 +129,13 @@ class EditorToolbar:
 
             if elem == 'add layer':
                 self.layer_count += 1
+                self.current_layer = self.layer_count
+                self.new_layer_status = 1
 
-            if elem == 'delete layer' and self.layer_count > 0: # adjust map manager current layers after - todo
+            if elem == 'delete layer' and self.layer_count > 0 and self.current_layer > 0:
                 self.layer_count -= 1
-                self.current_layer = 0
+                self.current_layer -= 1
+                self.delete_layer_status = 1
 
             if elem == 'layer down' and self.current_layer > 0:
                 self.current_layer -= 1
@@ -143,10 +157,15 @@ class EditorToolbar:
 
     def get_data(self) -> dict:
         return {
+                'drawing' : self.drawing,
+                'erasing' : self.erasing,
                 'drag state' : self.drag_status,
                 'grid status' : self.grid_status,
                 'zoom scale' : self.current_zoom_scale,
                 'reset status' : self.reset_status,
+                'clear status' : self.clear_status,
+                'new layer status' : self.new_layer_status,
+                'delete layer status' : self.delete_layer_status,
                 'current layer': self.current_layer,
                 'layer count': self.layer_count
                }
