@@ -16,13 +16,14 @@ class EditorMapManager:
         # map variables
         self.tile_size = 16
         self.map_size = [map_size[0]//self.tile_size, map_size[1]//self.tile_size]
-        self.map = Tilemap(self.map_size, self.tile_size)
+        self.map = Tilemap(self.map_surface, self.map_size, self.tile_size)
         self.zoom_scale = 1
         self.reset_offset = 0
         self.scroll_speed = 3
         self.scroll_offset = [0,0]
         self.display_grid = 0
         self.mouse_pos = None
+        self.asset_prev_pos = None
         self.drawing = 0
         self.erasing = 0
 
@@ -65,11 +66,18 @@ class EditorMapManager:
 
         # handle mouse position for drawing/erasing features
         if mouse_data['pos'][0] > self.blit_pos[0] and mouse_data['pos'][1] > self.blit_pos[1]:
+            # handle asset preview
+            if self.current_asset:
+                self.asset_prev_pos = ((mouse_data['pos'][0] - self.blit_pos[0] - self.scroll_offset[0] - self.current_asset[1][0].get_width()/2)/self.zoom_scale,
+                                       (mouse_data['pos'][1] - self.blit_pos[1] - self.scroll_offset[1] - self.current_asset[1][0].get_height()/2)/self.zoom_scale)
+
             # handle map drawing
             if toolbar_data['drawing'] and mouse_data['l_clicking'] and self.current_layer != 0 and self.current_asset:
                 self.map.add_tile(self.mouse_pos, self.current_layer, self.current_folder, self.current_asset[0], self.current_asset[1][0])
             
             # handle map erasing
+            if toolbar_data['erasing'] and mouse_data['l_clicking'] and self.current_layer != 0:
+                self.map.remove_tile(self.mouse_pos, self.current_layer)
 
         # handle grid display
         if self.display_grid != toolbar_data['grid status']:
@@ -131,7 +139,9 @@ class EditorMapManager:
         # render current selected asset
         if self.current_asset:
             self.font.write(self.hud_surface, self.current_asset[0], [6,3], shadow=1)
-            self.hud_surface.blit(self.current_asset[1][0], (6, 18))
+            asset_copy = self.current_asset[1][0].copy()
+            asset_copy.set_alpha(255)
+            self.hud_surface.blit(asset_copy, (6, 18))
         else:
             self.font.write(self.hud_surface, 'no asset selected', [6,3], shadow=1)
 
@@ -143,7 +153,13 @@ class EditorMapManager:
         if self.display_grid:
             self.render_grid()
 
-        self.map.render(self.map_surface)
+        self.map.render(self.map_surface, self.current_layer)
+
+        # render asset preview
+        if self.current_asset and self.asset_prev_pos:
+            asset_copy = self.current_asset[1][0].copy()
+            asset_copy.set_alpha(150)
+            self.map_surface.blit(self.current_asset[1][0], self.asset_prev_pos)
 
         # render map to main surface
         surface.blit(pg.transform.scale_by(self.map_surface, self.zoom_scale), (self.blit_pos[0]+self.scroll_offset[0], self.blit_pos[1]+self.scroll_offset[1]))

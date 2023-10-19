@@ -16,3 +16,6 @@ class Tile:
     
     def get_image(self) -> pg.Surface:
         return self.image
+    
+    def get_name(self) -> str:
+        return self.name

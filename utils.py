@@ -6,7 +6,7 @@ def load_images(path):
 
     try:
         for file in os.listdir(path):
-            img = pg.image.load(path+file).convert()
+            img = pg.image.load(path+file).convert_alpha()
             images[file[:-4]] = [img, img.get_rect()]
             images[file[:-4]][0].set_colorkey((0,0,0))
 

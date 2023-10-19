@@ -159,7 +159,7 @@ class EditorAssetManager:
                 continue
 
             # lower opacity when hovering over asset
-            asset[0].set_alpha(55)
+            asset[0].set_alpha(150)
 
             # handle asset selection indication
             if not mouse_data['l_click']:
