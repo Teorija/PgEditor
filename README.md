@@ -28,6 +28,11 @@ future features
 - copy
 - paste
 - asset selection search bar
+- add entity spawn point placement
+- add animated asset placement
+    - particle spawn point
+    - foliage
+    - lighting spawn points
 
 future improvements
 - optimize rendering so that it only renders what you can see on the screen
@@ -35,3 +40,4 @@ future improvements
 - UI overhaul
 - add the ability to have and select sub folders within an asset folder
 - add keyboard shortcuts for current tools
+- implement design pattern
