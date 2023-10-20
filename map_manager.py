@@ -81,7 +81,7 @@ class EditorMapManager:
 
             # handle map drawing
             if toolbar_data['drawing'] and mouse_data['l_clicking'] and self.current_layer != 0 and self.current_asset:
-                self.map.add_tile(self.mouse_pos, self.current_layer, self.current_folder, self.current_asset[0], self.current_asset[1][0])
+                self.map.add_tile(self.mouse_pos, self.current_layer, self.current_folder, self.current_asset[0], self.current_asset[1][0].copy())
             
             # handle map erasing
             if toolbar_data['erasing'] and mouse_data['l_clicking'] and self.current_layer != 0:
