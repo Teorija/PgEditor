@@ -41,7 +41,7 @@ class EditorToolbar:
         off_x = 6
         y_pos = (self.surface_size[1]/2) - button_size[1]/2
         
-        self.ui_elements['new map'] = ImageButton(button_size, (self.surface_size[0]-(button_size[0]+off_x)*15, y_pos), self.toolbar_surface, self.ui_icons['blank'])
+        self.ui_elements['new map'] = ImageButton(button_size, (self.surface_size[0]-(button_size[0]+off_x)*15, y_pos), self.toolbar_surface, self.ui_icons['new map'], self.ui_icons['new map hover'])
         self.ui_elements['load map'] = ImageButton(button_size, (self.surface_size[0]-(button_size[0]+off_x)*14, y_pos), self.toolbar_surface, self.ui_icons['load'], self.ui_icons['load hover'])
         self.ui_elements['save map'] = ImageButton(button_size, (self.surface_size[0]-(button_size[0]+off_x)*13, y_pos), self.toolbar_surface, self.ui_icons['save'], self.ui_icons['save hover'])
         self.ui_elements['draw'] = ImageButton(button_size, (self.surface_size[0]-(button_size[0]+off_x)*12, y_pos), self.toolbar_surface, self.ui_icons['draw'], self.ui_icons['draw hover'], self.ui_icons['draw selected'])
@@ -80,6 +80,9 @@ class EditorToolbar:
 
             if not mouse_data['l_click']:
                 continue
+
+            if elem == 'new map':
+                print('new map')
 
             if elem == 'draw' and not self.drawing:
                 self.drawing = 1
