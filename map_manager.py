@@ -22,6 +22,7 @@ class EditorMapManager:
         self.scroll_speed = 3
         self.scroll_offset = [0,0]
         self.display_grid = 0
+        self.mouse_in_bounds = 0
         self.mouse_pos = None
         self.asset_prev_pos = None
         self.drawing = 0
@@ -45,27 +46,31 @@ class EditorMapManager:
         # update toolbar data
         self.current_layer = toolbar_data['current layer']
         self.layer_count = toolbar_data['layer count']
+        self.drawing = toolbar_data['drawing']
+        self.erasing = toolbar_data['erasing']
 
         # update asset manager data
         self.current_asset = asset_manager_data['current asset']
         self.current_folder = asset_manager_data['current folder']
 
         # update hud
-        self.update_hud(toolbar_data)
+        self.update_hud()
 
         # update hud
-        self.update_map(mouse_data, keyboard_data, toolbar_data, asset_manager_data)
+        self.update_map(mouse_data, keyboard_data, toolbar_data)
 
-    def update_hud(self, toolbar_data) -> None:
+    def update_hud(self) -> None:
         # wipe surface for new frame
         self.hud_surface.fill(COLOURS['transparent black'])
 
-    def update_map(self, mouse_data, keyboard_data, toolbar_data, asset_manager_data) -> None:
+    def update_map(self, mouse_data, keyboard_data, toolbar_data) -> None:
         # wipe surface for new frame
         self.map_surface.fill(COLOURS['red 2'])
 
         # handle mouse position for drawing/erasing features
         if mouse_data['pos'][0] > self.blit_pos[0] and mouse_data['pos'][1] > self.blit_pos[1]:
+            self.mouse_in_bounds = 1
+
             # handle asset preview
             if self.current_asset:
                 self.asset_prev_pos = ((mouse_data['pos'][0] - self.blit_pos[0] - self.scroll_offset[0] - self.current_asset[1][0].get_width()/2)/self.zoom_scale,
@@ -78,6 +83,8 @@ class EditorMapManager:
             # handle map erasing
             if toolbar_data['erasing'] and mouse_data['l_clicking'] and self.current_layer != 0:
                 self.map.remove_tile(self.mouse_pos, self.current_layer)
+        else:
+            self.mouse_in_bounds = 0
 
         # handle grid display
         if self.display_grid != toolbar_data['grid status']:
@@ -156,7 +163,7 @@ class EditorMapManager:
         self.map.render(self.map_surface, self.current_layer)
 
         # render asset preview
-        if self.current_asset and self.asset_prev_pos:
+        if self.current_asset and self.asset_prev_pos and self.drawing and self.mouse_in_bounds:
             asset_copy = self.current_asset[1][0].copy()
             asset_copy.set_alpha(150)
             self.map_surface.blit(self.current_asset[1][0], self.asset_prev_pos)
