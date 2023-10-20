@@ -46,22 +46,28 @@ class ImageButton(PgUiElement):
         self.button_pos = pos
 
     def render(self) -> None:
-        self.button_pos = self.pos
-
         if self.hovering and self.hover_image:
-            self.surface.blit(self.hover_image[0], self.button_pos)
+            self.surface.blit(self.hover_image[0], self.pos)
             return
         
         if self.selected and self.selected_image:
-            self.surface.blit(self.selected_image[0], self.button_pos)
+            self.surface.blit(self.selected_image[0], self.pos)
             return
 
-        self.surface.blit(self.button_image, self.button_pos)
+        self.surface.blit(self.button_image, self.pos)
 
 class TextEntry(PgUiElement):
     def __init__(self, size, pos, surface) -> None:
         super().__init__(size, pos, surface)
         self.type = 'text entry'
+        self.button_rect = pg.Rect(pos[0], pos[1], size[0], size[1])
     
     def render(self) -> None:
-        pass
+        if self.hovering:
+            pg.draw.rect(self.surface, COLOURS['blue 3'], self.button_rect, width=1)
+            return
+        if self.selected:
+            pg.draw.rect(self.surface, COLOURS['red 2'], self.button_rect, width=1)
+            return
+        
+        pg.draw.rect(self.surface, COLOURS['gray'], self.button_rect, width=1)

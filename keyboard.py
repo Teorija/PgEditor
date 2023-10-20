@@ -18,3 +18,7 @@ class EditorKeyboardData:
                              }
                             
         }
+
+    def reset_key_status(self) -> None:
+        self.data['regular keys'] = {key:0 for key in self.data['regular keys']}
+        self.data['special keys'] = {key:0 for key in self.data['special keys']}

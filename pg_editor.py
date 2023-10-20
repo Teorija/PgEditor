@@ -89,6 +89,61 @@ class PgEditor:
                         self.keyboard.data['arrow keys']['up'] = 1
                     if event.key == pg.K_DOWN:
                         self.keyboard.data['arrow keys']['down'] = 1
+                    if event.key == pg.K_a:
+                        self.keyboard.data['regular keys']['a'] = 1
+                    if event.key == pg.K_b:
+                        self.keyboard.data['regular keys']['b'] = 1
+                    if event.key == pg.K_c:
+                        self.keyboard.data['regular keys']['c'] = 1
+                    if event.key == pg.K_d:
+                        self.keyboard.data['regular keys']['d'] = 1
+                    if event.key == pg.K_e:
+                        self.keyboard.data['regular keys']['e'] = 1
+                    if event.key == pg.K_f:
+                        self.keyboard.data['regular keys']['f'] = 1
+                    if event.key == pg.K_g:
+                        self.keyboard.data['regular keys']['g'] = 1
+                    if event.key == pg.K_h:
+                        self.keyboard.data['regular keys']['h'] = 1
+                    if event.key == pg.K_i:
+                        self.keyboard.data['regular keys']['i'] = 1
+                    if event.key == pg.K_j:
+                        self.keyboard.data['regular keys']['j'] = 1
+                    if event.key == pg.K_k:
+                        self.keyboard.data['regular keys']['k'] = 1
+                    if event.key == pg.K_l:
+                        self.keyboard.data['regular keys']['l'] = 1
+                    if event.key == pg.K_m:
+                        self.keyboard.data['regular keys']['m'] = 1
+                    if event.key == pg.K_n:
+                        self.keyboard.data['regular keys']['n'] = 1
+                    if event.key == pg.K_o:
+                        self.keyboard.data['regular keys']['o'] = 1
+                    if event.key == pg.K_p:
+                        self.keyboard.data['regular keys']['p'] = 1
+                    if event.key == pg.K_q:
+                        self.keyboard.data['regular keys']['q'] = 1
+                    if event.key == pg.K_r:
+                        self.keyboard.data['regular keys']['r'] = 1
+                    if event.key == pg.K_s:
+                        self.keyboard.data['regular keys']['s'] = 1
+                    if event.key == pg.K_t:
+                        self.keyboard.data['regular keys']['t'] = 1
+                    if event.key == pg.K_u:
+                        self.keyboard.data['regular keys']['u'] = 1
+                    if event.key == pg.K_v:
+                        self.keyboard.data['regular keys']['v'] = 1
+                    if event.key == pg.K_w:
+                        self.keyboard.data['regular keys']['w'] = 1
+                    if event.key == pg.K_x:
+                        self.keyboard.data['regular keys']['x'] = 1
+                    if event.key == pg.K_y:
+                        self.keyboard.data['regular keys']['y'] = 1
+                    if event.key == pg.K_z:
+                        self.keyboard.data['regular keys']['z'] = 1
+                    if event.key == pg.K_ESCAPE:
+                        self.keyboard.data['special keys']['esc'] = 1
+
                 if event.type == pg.KEYUP:
                     if event.key == pg.K_LEFT:
                         self.keyboard.data['arrow keys']['left'] = 0
@@ -103,10 +158,11 @@ class PgEditor:
         self.canvas.fill(COLOURS['blue 3']) # wipe canvas for new frame
         
         # update objects
-        self.toolbar.update(self.mouse.data)
+        self.toolbar.update(self.mouse.data, self.keyboard.data)
         self.asset_manager.update(self.mouse.data)
         self.map_manager.update(self.mouse.data, self.keyboard.data, self.asset_manager.get_data(), self.toolbar.get_data())
         self.mouse.reset_click_status()
+        self.keyboard.reset_key_status()
 
     def render(self) -> None:
         # render objects

@@ -23,6 +23,16 @@ class EditorToolbar:
         self.map_size = '40 x 22'
         self.map_size_text = '/ map size : ' + self.map_size
         
+        self.new_map_status = 0
+        self.new_map_surface_blit_pos = (self.ui_elements['new map'].button_rect.bottomright[0]+15, self.ui_elements['new map'].button_rect.bottomright[1]+15)
+        self.new_map_surface = pg.Surface((150, 60)).convert()
+        self.new_map_ui_elements = {}
+        self.new_map_ui_elements['create'] = ImageButton((30, 15), (self.new_map_surface.get_width()/2-15, self.new_map_surface.get_height()-19), self.new_map_surface, self.ui_icons['create'], self.ui_icons['create hover'])
+        self.new_map_ui_elements['map name'] = TextEntry((90, 15), (55, 3), self.new_map_surface)
+        self.new_map_ui_elements['map size row'] = TextEntry((45, 15), (50, 21), self.new_map_surface)
+        self.new_map_ui_elements['map size col'] = TextEntry((45, 15), (100, 21), self.new_map_surface)
+        self.saving_status = 0
+        self.loading_status = 0
         self.drawing = 0
         self.erasing = 0
         self.grid_status = 0
@@ -41,7 +51,7 @@ class EditorToolbar:
         off_x = 6
         y_pos = (self.surface_size[1]/2) - button_size[1]/2
         
-        self.ui_elements['new map'] = ImageButton(button_size, (self.surface_size[0]-(button_size[0]+off_x)*15, y_pos), self.toolbar_surface, self.ui_icons['new map'], self.ui_icons['new map hover'])
+        self.ui_elements['new map'] = ImageButton(button_size, (self.surface_size[0]-(button_size[0]+off_x)*15, y_pos), self.toolbar_surface, self.ui_icons['new map'], self.ui_icons['new map hover'], self.ui_icons['new map selected'])
         self.ui_elements['load map'] = ImageButton(button_size, (self.surface_size[0]-(button_size[0]+off_x)*14, y_pos), self.toolbar_surface, self.ui_icons['load'], self.ui_icons['load hover'])
         self.ui_elements['save map'] = ImageButton(button_size, (self.surface_size[0]-(button_size[0]+off_x)*13, y_pos), self.toolbar_surface, self.ui_icons['save'], self.ui_icons['save hover'])
         self.ui_elements['draw'] = ImageButton(button_size, (self.surface_size[0]-(button_size[0]+off_x)*12, y_pos), self.toolbar_surface, self.ui_icons['draw'], self.ui_icons['draw hover'], self.ui_icons['draw selected'])
@@ -57,11 +67,52 @@ class EditorToolbar:
         self.ui_elements['layer down'] = ImageButton(button_size, (self.surface_size[0]-(button_size[0]+off_x)*2, y_pos), self.toolbar_surface, self.ui_icons['layer down'], self.ui_icons['layer down hover'])
         self.ui_elements['layer up'] = ImageButton(button_size, (self.surface_size[0]-button_size[0]-off_x, y_pos), self.toolbar_surface, self.ui_icons['layer up'], self.ui_icons['layer up hover'])
 
-    def update(self, mouse_data) -> None:
+    def update(self, mouse_data, keyboard_data) -> None:
         self.toolbar_surface.fill(COLOURS['gray'])
-        self.update_ui_elements(mouse_data)
+        self.new_map_surface.fill(COLOURS['black'])
+        self.update_toolbar_ui_elements(mouse_data)
+        
+        if self.new_map_status:
+            self.update_new_map_ui_elements(mouse_data, keyboard_data)
 
-    def update_ui_elements(self, mouse_data) -> None:
+    def update_new_map_ui_elements(self, mouse_data, keyboard_data) -> None:
+        mouse_pos = (mouse_data['pos'][0] - self.new_map_surface_blit_pos[0], mouse_data['pos'][1] - self.new_map_surface_blit_pos[1])
+
+        for elem in self.new_map_ui_elements:
+            if keyboard_data['special keys']['esc']:
+                self.new_map_ui_elements['map name'].selected = 0
+                self.new_map_ui_elements['map size row'].selected = 0
+                self.new_map_ui_elements['map size col'].selected = 0
+                continue
+
+            if not self.new_map_ui_elements[elem].button_rect.collidepoint(mouse_pos):
+                self.new_map_ui_elements[elem].hovering = 0
+                continue
+
+            self.new_map_ui_elements[elem].hovering = 1
+
+            if not mouse_data['l_click']:
+                continue
+
+            if elem == 'map name':
+                self.new_map_ui_elements[elem].selected = 1
+                self.new_map_ui_elements['map size row'].selected = 0
+                self.new_map_ui_elements['map size col'].selected = 0
+                continue
+
+            if elem == 'map size row':
+                self.new_map_ui_elements[elem].selected = 1
+                self.new_map_ui_elements['map name'].selected = 0
+                self.new_map_ui_elements['map size col'].selected = 0
+                continue
+
+            if elem == 'map size col':
+                self.new_map_ui_elements[elem].selected = 1
+                self.new_map_ui_elements['map name'].selected = 0
+                self.new_map_ui_elements['map size row'].selected = 0
+                continue
+
+    def update_toolbar_ui_elements(self, mouse_data) -> None:
         mouse_pos = mouse_data['pos']
 
         for elem in self.ui_elements:
@@ -81,8 +132,12 @@ class EditorToolbar:
             if not mouse_data['l_click']:
                 continue
 
-            if elem == 'new map':
-                print('new map')
+            if elem == 'new map' and not self.new_map_status:
+                self.new_map_status = 1
+                self.ui_elements[elem].selected = 1
+            elif elem == 'new map' and self.new_map_status:
+                self.new_map_status = 0
+                self.ui_elements[elem].selected = 0
 
             if elem == 'draw' and not self.drawing:
                 self.drawing = 1
@@ -149,6 +204,7 @@ class EditorToolbar:
     def render(self, surface) -> None:
         self.render_ui_elements()
         surface.blit(self.toolbar_surface, (0,0))
+        self.render_new_map_popup(surface)
 
     def render_ui_elements(self) -> None:
         self.font.write(self.toolbar_surface, self.editor_version_text, [6, 1], shadow=1)
@@ -157,6 +213,18 @@ class EditorToolbar:
 
         for elem in self.ui_elements:
             self.ui_elements[elem].render()
+
+    def render_new_map_popup(self, surface) -> None:
+        if self.new_map_status:
+                start_pos = self.ui_elements['new map'].button_rect.bottomright
+                pg.draw.line(surface, COLOURS['black'], start_pos, (start_pos[0]+15, start_pos[1]+15), width=3)
+                self.font.write(self.new_map_surface, 'map name : ', [6,6], shadow=1)
+                self.font.write(self.new_map_surface, 'map size : ', [6,24], shadow=1)
+                
+                for elem in self.new_map_ui_elements:
+                    self.new_map_ui_elements[elem].render()
+
+                surface.blit(self.new_map_surface, self.new_map_surface_blit_pos)
 
     def get_data(self) -> dict:
         return {
