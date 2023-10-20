@@ -2,6 +2,7 @@ from tilemap import Tilemap
 import pygame as pg
 from const import COLOURS
 import json
+import numpy as np
 
 class EditorMapManager:
     def __init__(self, surface_size, map_size, blit_off_x, blit_off_y, font) -> None:
@@ -24,7 +25,7 @@ class EditorMapManager:
         self.display_grid = 0
         self.mouse_in_bounds = 0
         self.mouse_pos = None
-        self.asset_prev_pos = None
+        self.asset_preview_pos = None
         self.drawing = 0
         self.erasing = 0
 
@@ -34,13 +35,11 @@ class EditorMapManager:
         self.current_asset = None
         self.current_layer = 0
         self.layer_count = 0
-        self.current_tool = 'none'
-        self.mouse_pos = None
         
     def update(self, mouse_data, keyboard_data, asset_manager_data, toolbar_data) -> None:
         # update mouse data
-        mouse_x = ((mouse_data['pos'][0] - self.blit_pos[0] - self.scroll_offset[0])/self.zoom_scale)//16
-        mouse_y = ((mouse_data['pos'][1] - self.blit_pos[1] - self.scroll_offset[1])/self.zoom_scale)//16
+        mouse_x = np.clip(((mouse_data['pos'][0] - self.blit_pos[0] - self.scroll_offset[0])/self.zoom_scale)//16, 0, self.map_size[0]-1)
+        mouse_y = np.clip(((mouse_data['pos'][1] - self.blit_pos[1] - self.scroll_offset[1])/self.zoom_scale)//16, 0, self.map_size[1]-1)
         self.mouse_pos = (mouse_x, mouse_y)
 
         # update toolbar data
@@ -73,8 +72,12 @@ class EditorMapManager:
 
             # handle asset preview
             if self.current_asset:
-                self.asset_prev_pos = ((mouse_data['pos'][0] - self.blit_pos[0] - self.scroll_offset[0] - self.current_asset[1][0].get_width()/2)/self.zoom_scale,
-                                       (mouse_data['pos'][1] - self.blit_pos[1] - self.scroll_offset[1] - self.current_asset[1][0].get_height()/2)/self.zoom_scale)
+                if self.current_folder == 'terrain':
+                    self.asset_preview_pos = ((mouse_data['pos'][0] - self.blit_pos[0] - self.scroll_offset[0] - self.current_asset[1][0].get_width()/2)/self.zoom_scale,
+                                           (mouse_data['pos'][1] - self.blit_pos[1] - self.scroll_offset[1] - self.current_asset[1][0].get_height()/2)/self.zoom_scale)
+                if self.current_folder == 'decorative':
+                    self.asset_preview_pos = ((mouse_data['pos'][0] - self.blit_pos[0] - self.scroll_offset[0])/self.zoom_scale,
+                                           (mouse_data['pos'][1] - self.blit_pos[1] - self.scroll_offset[1])/self.zoom_scale)
 
             # handle map drawing
             if toolbar_data['drawing'] and mouse_data['l_clicking'] and self.current_layer != 0 and self.current_asset:
@@ -163,10 +166,10 @@ class EditorMapManager:
         self.map.render(self.map_surface, self.current_layer)
 
         # render asset preview
-        if self.current_asset and self.asset_prev_pos and self.drawing and self.mouse_in_bounds:
+        if self.current_asset and self.asset_preview_pos and self.drawing and self.mouse_in_bounds:
             asset_copy = self.current_asset[1][0].copy()
             asset_copy.set_alpha(150)
-            self.map_surface.blit(self.current_asset[1][0], self.asset_prev_pos)
+            self.map_surface.blit(self.current_asset[1][0], self.asset_preview_pos)
 
         # render map to main surface
         surface.blit(pg.transform.scale_by(self.map_surface, self.zoom_scale), (self.blit_pos[0]+self.scroll_offset[0], self.blit_pos[1]+self.scroll_offset[1]))
