@@ -28,9 +28,9 @@ class EditorToolbar:
         self.new_map_surface = pg.Surface((150, 60)).convert()
         self.new_map_ui_elements = {}
         self.new_map_ui_elements['create'] = ImageButton((30, 15), (self.new_map_surface.get_width()/2-15, self.new_map_surface.get_height()-19), self.new_map_surface, self.ui_icons['create'], self.ui_icons['create hover'])
-        self.new_map_ui_elements['map name'] = TextEntry((90, 15), (55, 3), self.new_map_surface)
-        self.new_map_ui_elements['map size row'] = TextEntry((45, 15), (50, 21), self.new_map_surface)
-        self.new_map_ui_elements['map size col'] = TextEntry((45, 15), (100, 21), self.new_map_surface)
+        self.new_map_ui_elements['map name'] = TextEntry((90, 15), (55, 3), self.new_map_surface, 19, 3, self.font)
+        self.new_map_ui_elements['map size row'] = TextEntry((45, 15), (50, 21), self.new_map_surface, 9, 1, self.font)
+        self.new_map_ui_elements['map size col'] = TextEntry((45, 15), (100, 21), self.new_map_surface, 9, 1, self.font)
         self.saving_status = 0
         self.loading_status = 0
         self.drawing = 0
@@ -79,6 +79,9 @@ class EditorToolbar:
         mouse_pos = (mouse_data['pos'][0] - self.new_map_surface_blit_pos[0], mouse_data['pos'][1] - self.new_map_surface_blit_pos[1])
 
         for elem in self.new_map_ui_elements:
+            if self.new_map_ui_elements[elem].selected:
+                self.new_map_ui_elements[elem].update(keyboard_data)
+
             if keyboard_data['special keys']['esc']:
                 self.new_map_ui_elements['map name'].selected = 0
                 self.new_map_ui_elements['map size row'].selected = 0
@@ -110,6 +113,19 @@ class EditorToolbar:
                 self.new_map_ui_elements[elem].selected = 1
                 self.new_map_ui_elements['map name'].selected = 0
                 self.new_map_ui_elements['map size row'].selected = 0
+                continue
+
+            if elem == 'create':
+                self.new_map_status = 0
+                self.ui_elements['new map'].selected = 0
+                self.map_name = self.new_map_ui_elements['map name'].entry_text
+                self.map_name_text = 'map name : ' + self.map_name
+                self.map_name_text_center = self.font.get_center(self.map_name_text)
+                self.map_size = self.new_map_ui_elements['map size row'].entry_text + ' x ' + self.new_map_ui_elements['map size col'].entry_text
+                self.map_size_text = '/ map size : ' + self.map_size
+                self.new_map_ui_elements['map name'].reset()
+                self.new_map_ui_elements['map size row'].reset()
+                self.new_map_ui_elements['map size col'].reset()
                 continue
 
     def update_toolbar_ui_elements(self, mouse_data) -> None:

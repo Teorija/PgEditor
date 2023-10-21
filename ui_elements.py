@@ -57,17 +57,54 @@ class ImageButton(PgUiElement):
         self.surface.blit(self.button_image, self.pos)
 
 class TextEntry(PgUiElement):
-    def __init__(self, size, pos, surface) -> None:
+    def __init__(self, size, pos, surface, limit, restriction, font) -> None:
         super().__init__(size, pos, surface)
         self.type = 'text entry'
         self.button_rect = pg.Rect(pos[0], pos[1], size[0], size[1])
+        self.font = font
+        self.restriction = restriction # 0 = no restriction, 1 = numbers only, 2 = letters only, 3 = letters and numbers only
+        self.entry_text_limit = limit
+        self.entry_text = ''
+        self.entry_text_pos = [pos[0]+3, pos[1]+2]
     
     def render(self) -> None:
+        self.font.write(self.surface, self.entry_text, pos=self.entry_text_pos, shadow=1)
+        pg.draw.rect(self.surface, COLOURS['gray'], self.button_rect, width=1)
+
         if self.hovering:
             pg.draw.rect(self.surface, COLOURS['blue 3'], self.button_rect, width=1)
             return
         if self.selected:
             pg.draw.rect(self.surface, COLOURS['red 2'], self.button_rect, width=1)
             return
-        
-        pg.draw.rect(self.surface, COLOURS['gray'], self.button_rect, width=1)
+
+    def update(self, keyboard_data):
+        for key in keyboard_data['regular keys']:
+            if keyboard_data['regular keys'][key] and key == 'del':
+                self.entry_text = self.entry_text[:-1]
+                continue
+
+            if keyboard_data['regular keys'][key] and len(self.entry_text) < self.entry_text_limit:
+                if self.restriction == 0:
+                    self.entry_text += key
+                    continue
+                if self.restriction == 1 and key.isdigit():
+                    self.entry_text += key
+                    continue
+                if self.restriction == 2 and key.isalpha():
+                    self.entry_text += key
+                    continue
+                if self.restriction == 3 and (key.isalnum() or key == ' '):
+                    self.entry_text += key
+                    continue
+                
+    def get_entry(self):
+        return self.entry_text
+    
+    def clear_entry(self):
+        self.entry_text = ''
+
+    def reset(self):
+        self.clear_entry()
+        self.selected = 0
+        self.hovering = 0

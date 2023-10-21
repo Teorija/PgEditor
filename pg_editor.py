@@ -141,8 +141,32 @@ class PgEditor:
                         self.keyboard.data['regular keys']['y'] = 1
                     if event.key == pg.K_z:
                         self.keyboard.data['regular keys']['z'] = 1
+                    if event.key == pg.K_SPACE:
+                        self.keyboard.data['regular keys'][' '] = 1
                     if event.key == pg.K_ESCAPE:
                         self.keyboard.data['special keys']['esc'] = 1
+                    if event.key == pg.K_DELETE or event.key == pg.K_BACKSPACE:
+                        self.keyboard.data['regular keys']['del'] = 1
+                    if event.key == pg.K_0:
+                        self.keyboard.data['regular keys']['0'] = 1
+                    if event.key == pg.K_1:
+                        self.keyboard.data['regular keys']['1'] = 1
+                    if event.key == pg.K_2:
+                        self.keyboard.data['regular keys']['2'] = 1
+                    if event.key == pg.K_3:
+                        self.keyboard.data['regular keys']['3'] = 1
+                    if event.key == pg.K_4:
+                        self.keyboard.data['regular keys']['4'] = 1
+                    if event.key == pg.K_5:
+                        self.keyboard.data['regular keys']['5'] = 1
+                    if event.key == pg.K_6:
+                        self.keyboard.data['regular keys']['6'] = 1
+                    if event.key == pg.K_7:
+                        self.keyboard.data['regular keys']['7'] = 1
+                    if event.key == pg.K_8:
+                        self.keyboard.data['regular keys']['8'] = 1
+                    if event.key == pg.K_9:
+                        self.keyboard.data['regular keys']['9'] = 1
 
                 if event.type == pg.KEYUP:
                     if event.key == pg.K_LEFT:
