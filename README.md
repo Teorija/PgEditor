@@ -41,3 +41,4 @@ future improvements
 - add the ability to have and select sub folders within an asset folder
 - add keyboard shortcuts for current tools
 - implement design pattern
+- code clean up and documentation
