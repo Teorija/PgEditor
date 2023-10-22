@@ -34,6 +34,7 @@ Upon loading the application a default map size and name are initialized.
 - code cleanup and documentation
 - optimize rendering so that a new frame is only rendered if it differs from the previous frame
 - update tilemap rendering so that it only renders what is visible on the screen
+- UI aesthetic overhaul
 
 ### Version 2.0 - Planned Features
 
