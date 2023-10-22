@@ -1,44 +1,41 @@
 # PgEditor
-a tool written in python and pygame for 2d pixel art map creation
+### Project Intent
 
-current features
+After taking a course in computer graphics using OpenGL I kept getting drawn towards the idea of creating a video game, albeit a simple one. However I wasn't intereseted in creating a 3D video game, rather I wanted to create something that reminded me about old flash games I used to play. Although I could create a 2D game using C++ and OpenGL I wanted to practice my python skills. Python has a library called PyGame which is a graphics framework. Since Python has a slower performance than C++ I decided a lower resolution pixel art game would be a good fit to maximize performance. 
+
+While starting to write my game using Python and PyGame I decided to manage my maps using a tile based system. When I was writting the code to describe the map I came to the realization that hard coding the map would be tedious and time consuming. This lead me to develop my first sub-project for the game, a map maker/level editor. 
+
+The map maker application "PgEditor" 
+
+### Usage
+
+Upon loading the application a default map size and name are initialized. 
+
+### Version 1.0 - Current Features
+
+- create new map
+- save map
+- load map
+- draw
+- erase
+- clear map
+- toggle grid
+- reset map position
+- zoom in
+- zoom out
+- scroll
 - add layer
 - delete layer
 - change layer up
 - change layer down
-- overlay grid
-- scroll
-- reset scroll position
-- zoom in
-- zoom out
-- draw
-- erase
-- clear map
-- save map
-- load map
-- create new map
 
-future features
-- undo
-- redo
-- select
-- auto tile
-- fill
-- cut
-- copy
-- paste
-- asset selection search bar
-- add entity spawn point placement
-- add animated asset placement
-    - particle spawn point
-    - foliage
-    - lighting spawn points
+### Version 1.0 - To Do List
 
-future improvements
-- optimize rendering so that it only renders what you can see on the screen
-- optimize rendering so that a frame is only rendered when there is a difference between the current frame and last frame
-- UI overhaul
-- add the ability to have and select sub folders within an asset folder
-- add keyboard shortcuts for current tools
-- implement design pattern
-- code clean up and documentation
+- code cleanup and documentation
+- optimize rendering so that a new frame is only rendered if it differs from the previous frame
+
+### Version 2.0 - Planned Features
+
+### Version 2.0 - To Do List
+
+- implement a fitting design pattern
