@@ -5,12 +5,6 @@ After taking a course in computer graphics using OpenGL I kept getting drawn tow
 
 While starting to write my game using Python and PyGame I decided to manage my maps using a tile based system. When I was writting the code to describe the map I came to the realization that hard coding the map would be tedious and time consuming. This lead me to develop my first sub-project for the game, a map maker/level editor. 
 
-The map maker application "PgEditor" 
-
-### Usage
-
-Upon loading the application a default map size and name are initialized. 
-
 ### Version 1.0 - Current Features
 
 - create new map
@@ -32,11 +26,15 @@ Upon loading the application a default map size and name are initialized.
 ### Version 1.0 - To Do List
 
 - code cleanup and documentation
+- add keyboard shortcuts for tool functionality
 - optimize rendering so that a new frame is only rendered if it differs from the previous frame
 - update tilemap rendering so that it only renders what is visible on the screen
 - UI aesthetic overhaul
 
 ### Version 2.0 - Planned Features
+
+- add a selection tool for auto fill, auto tiling, cut, copy and paste
+- add general auto fill tool 
 
 ### Version 2.0 - To Do List
 
