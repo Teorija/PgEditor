@@ -3,10 +3,9 @@ from tile import Tile
 import json
 
 class Tilemap:
-    def __init__(self, map_surface, map_size, tile_size) -> None:
+    def __init__(self, map_size, tile_size) -> None:
         self.map_size = map_size
         self.tile_size = tile_size
-        self.map_surface = map_surface
         self.terrain = {}
         self.decorative = {}
 

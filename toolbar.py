@@ -21,6 +21,8 @@ class EditorToolbar:
         self.map_name_text_center = self.font.get_center(self.map_name_text)
         
         self.map_size = '40 x 22'
+        self.map_size_w = 40
+        self.map_size_h = 22
         self.map_size_text = '/ map size : ' + self.map_size
         
         self.new_map_status = 0
@@ -73,6 +75,10 @@ class EditorToolbar:
         self.update_toolbar_ui_elements(mouse_data)
         
         if self.new_map_status:
+            self.drawing = 0
+            self.ui_elements['draw'].selected = 0
+            self.erasing = 0
+            self.ui_elements['erase'].selected = 0
             self.update_new_map_ui_elements(mouse_data, keyboard_data)
 
     def update_new_map_ui_elements(self, mouse_data, keyboard_data) -> None:
@@ -116,16 +122,26 @@ class EditorToolbar:
                 continue
 
             if elem == 'create':
+                if self.new_map_ui_elements['map name'].entry_text == '' or self.new_map_ui_elements['map size row'].entry_text == '' or self.new_map_ui_elements['map size col'].entry_text == '':
+                    return
+                
+                if self.new_map_ui_elements['map size row'].entry_text[0] == '0' or self.new_map_ui_elements['map size col'].entry_text[0] == '0':
+                    return
+                
                 self.new_map_status = 0
                 self.ui_elements['new map'].selected = 0
                 self.map_name = self.new_map_ui_elements['map name'].entry_text
                 self.map_name_text = 'map name : ' + self.map_name
                 self.map_name_text_center = self.font.get_center(self.map_name_text)
                 self.map_size = self.new_map_ui_elements['map size row'].entry_text + ' x ' + self.new_map_ui_elements['map size col'].entry_text
+                self.map_size_w = int(self.new_map_ui_elements['map size row'].entry_text)
+                self.map_size_h = int(self.new_map_ui_elements['map size col'].entry_text)
                 self.map_size_text = '/ map size : ' + self.map_size
                 self.new_map_ui_elements['map name'].reset()
                 self.new_map_ui_elements['map size row'].reset()
                 self.new_map_ui_elements['map size col'].reset()
+                self.current_layer = 0
+                self.layer_count = 0
                 continue
 
     def update_toolbar_ui_elements(self, mouse_data) -> None:
@@ -244,6 +260,7 @@ class EditorToolbar:
 
     def get_data(self) -> dict:
         return {
+                'map size' : [self.map_size_w, self.map_size_h],
                 'drawing' : self.drawing,
                 'erasing' : self.erasing,
                 'drag state' : self.drag_status,

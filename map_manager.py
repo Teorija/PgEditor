@@ -17,7 +17,7 @@ class EditorMapManager:
         # map variables
         self.tile_size = 16
         self.map_size = [map_size[0]//self.tile_size, map_size[1]//self.tile_size]
-        self.map = Tilemap(self.map_surface, self.map_size, self.tile_size)
+        self.map = Tilemap(self.map_size, self.tile_size)
         self.zoom_scale = 1
         self.reset_offset = 0
         self.scroll_speed = 3
@@ -38,8 +38,8 @@ class EditorMapManager:
         
     def update(self, mouse_data, keyboard_data, asset_manager_data, toolbar_data) -> None:
         # update mouse data
-        mouse_x = np.clip(((mouse_data['pos'][0] - self.blit_pos[0] - self.scroll_offset[0])/self.zoom_scale)//16, 0, self.map_size[0]-1)
-        mouse_y = np.clip(((mouse_data['pos'][1] - self.blit_pos[1] - self.scroll_offset[1])/self.zoom_scale)//16, 0, self.map_size[1]-1)
+        mouse_x = ((mouse_data['pos'][0] - self.blit_pos[0] - self.scroll_offset[0])/self.zoom_scale)//16
+        mouse_y = ((mouse_data['pos'][1] - self.blit_pos[1] - self.scroll_offset[1])/self.zoom_scale)//16
         self.mouse_pos = (mouse_x, mouse_y)
 
         # update toolbar data
@@ -47,6 +47,11 @@ class EditorMapManager:
         self.layer_count = toolbar_data['layer count']
         self.drawing = toolbar_data['drawing']
         self.erasing = toolbar_data['erasing']
+        
+        if self.map_size != toolbar_data['map size']:
+            self.map_size = toolbar_data['map size']
+            self.map_surface = pg.Surface((self.map_size[0]*self.tile_size, self.map_size[1]*self.tile_size)).convert()
+            self.map.clear_map()
 
         # update asset manager data
         self.current_asset = asset_manager_data['current asset']
@@ -67,7 +72,12 @@ class EditorMapManager:
         self.map_surface.fill(COLOURS['red 2'])
 
         # handle mouse position for drawing/erasing features
-        if mouse_data['pos'][0] > self.blit_pos[0] and mouse_data['pos'][1] > self.blit_pos[1]:
+        bounds_x_min = self.blit_pos[0]+self.scroll_offset[0]
+        bounds_y_min = self.blit_pos[1]+self.scroll_offset[1]
+        bounds_x_max = self.blit_pos[0]+self.scroll_offset[0]+self.map_size[0]*self.tile_size*self.zoom_scale
+        bounds_y_max = self.blit_pos[1]+self.scroll_offset[1]+self.map_size[1]*self.tile_size*self.zoom_scale
+
+        if mouse_data['pos'][0] > bounds_x_min and mouse_data['pos'][1] > bounds_y_min and mouse_data['pos'][0] < bounds_x_max and mouse_data['pos'][1] < bounds_y_max:
             self.mouse_in_bounds = 1
 
             # handle asset preview
