@@ -10,11 +10,44 @@ class Tilemap:
         self.decorative = {}
 
     def save_map(self, map_name) -> None:
-        pass
+        map_data = {
+            'map name': map_name,
+            'map size': self.map_size,
+            'tile size': self.tile_size,
+            'terrain': {},
+            'decorative': {}
+        }
+
+        for layer in self.terrain:
+            map_data['terrain'][layer] = {}
+            for tile_pos in self.terrain[layer]:
+                map_data['terrain'][layer][str(tile_pos)] = self.terrain[layer][tile_pos].get_name()
+
+        for layer in self.decorative:
+            map_data['decorative'][layer] = {}
+            for tile_pos in self.decorative[layer]:
+                map_data['decorative'][layer][str(tile_pos)] = self.decorative[layer][tile_pos].get_name()
+
+        with open('assets/maps/'+map_name+'.json', 'w') as f:
+            json.dump(map_data, f, indent=4)
 
     def load_map(self, map_name) -> None:
-        pass
+        with open('assets/maps/'+map_name, 'r') as f:
+            map_data = json.load(f)
 
+        self.map_size = map_data['map size']
+        self.tile_size = map_data['tile size']
+
+        for layer in map_data['terrain']:
+            self.terrain[layer] = {}
+            for tile_pos in map_data['terrain'][layer]:
+                self.terrain[layer][eval(tile_pos)] = Tile('terrain', eval(tile_pos), map_data['terrain'][layer][tile_pos], pg.image.load('assets/editor assets/terrain/'+map_data['terrain'][layer][tile_pos]+'.png').convert_alpha(), self.tile_size)
+
+        for layer in map_data['decorative']:
+            self.decorative[layer] = {}
+            for tile_pos in map_data['decorative'][layer]:
+                self.decorative[layer][eval(tile_pos)] = Tile('decorative', eval(tile_pos), map_data['decorative'][layer][tile_pos], pg.image.load('assets/editor assets/decorative/'+map_data['decorative'][layer][tile_pos]+'.png').convert_alpha(), self.tile_size)
+        
     def add_layer(self, layer) -> None:
         self.terrain[layer] = {}
         self.decorative[layer] = {}

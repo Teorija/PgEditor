@@ -1,8 +1,9 @@
 from tilemap import Tilemap
 import pygame as pg
 from const import COLOURS
-import json
-import numpy as np
+import tkinter as tk
+from tkinter import filedialog
+import threading
 
 class EditorMapManager:
     def __init__(self, surface_size, map_size, blit_off_x, blit_off_y, font) -> None:
@@ -13,8 +14,10 @@ class EditorMapManager:
         self.blit_pos = (blit_off_x, blit_off_y)
         self.last_frame = None
         self.font = font
-        
+
         # map variables
+        self.map_path = None
+        self.choose_map_thread = threading.Thread(target=self.load_map_path)
         self.tile_size = 16
         self.map_size = [map_size[0]//self.tile_size, map_size[1]//self.tile_size]
         self.map = Tilemap(self.map_size, self.tile_size)
@@ -70,6 +73,18 @@ class EditorMapManager:
     def update_map(self, mouse_data, keyboard_data, toolbar_data) -> None:
         # wipe surface for new frame
         self.map_surface.fill(COLOURS['red 2'])
+
+        # handle map save
+        if toolbar_data['save status']:
+            self.map.save_map(toolbar_data['map name'])
+
+        # handle map load
+        if toolbar_data['load status']:
+            self.choose_map_thread.start()
+        
+        if self.map_path:
+            self.map.load_map(self.map_path)
+            self.map_path = None
 
         # handle mouse position for drawing/erasing features
         bounds_x_min = self.blit_pos[0]+self.scroll_offset[0]
@@ -192,3 +207,11 @@ class EditorMapManager:
             pg.draw.line(self.map_surface, COLOURS['black'], (0, row*self.tile_size), (cols*self.tile_size, row*self.tile_size))
             for col in range(1, cols):
                 pg.draw.line(self.map_surface, COLOURS['black'], (col*self.tile_size, 0), (col*self.tile_size, rows*self.tile_size))
+
+    def load_map_path(self):
+        tk_root = tk.Tk()
+        tk_root.withdraw()
+        path = filedialog.askopenfilename()
+        self.map_path = path.split('/')[-1]
+        tk_root.destroy()
+        

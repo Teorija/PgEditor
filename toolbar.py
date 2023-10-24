@@ -160,6 +160,8 @@ class EditorToolbar:
             self.clear_status = 0
             self.new_layer_status = 0
             self.delete_layer_status = 0
+            self.saving_status = 0
+            self.loading_status = 0
 
             if not mouse_data['l_click']:
                 continue
@@ -170,6 +172,12 @@ class EditorToolbar:
             elif elem == 'new map' and self.new_map_status:
                 self.new_map_status = 0
                 self.ui_elements[elem].selected = 0
+
+            if elem == 'save map':
+                self.saving_status = 1
+
+            if elem == 'load map':
+                self.loading_status = 1
 
             if elem == 'draw' and not self.drawing:
                 self.drawing = 1
@@ -261,6 +269,9 @@ class EditorToolbar:
     def get_data(self) -> dict:
         return {
                 'map size' : [self.map_size_w, self.map_size_h],
+                'map name' : self.map_name,
+                'save status' : self.saving_status,
+                'load status' : self.loading_status,
                 'drawing' : self.drawing,
                 'erasing' : self.erasing,
                 'drag state' : self.drag_status,
