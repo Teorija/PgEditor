@@ -8,20 +8,35 @@ While starting to write my game using Python and PyGame I decided to manage my m
 ### Version 1.0 - Current Features
 
 - create new map
+![alt text](https://github.com/Teorija/PgEditor/blob/main/assets/icons/toolbar/new%20map.png)
 - save map
+![alt text](https://github.com/Teorija/PgEditor/blob/main/assets/icons/toolbar/save.png)
 - load map
+![alt text](https://github.com/Teorija/PgEditor/blob/main/assets/icons/toolbar/load.png)
 - draw
+![alt text](https://github.com/Teorija/PgEditor/blob/main/assets/icons/toolbar/draw.png)
 - erase
+![alt text](https://github.com/Teorija/PgEditor/blob/main/assets/icons/toolbar/erase.png)
 - clear map
+![alt text](https://github.com/Teorija/PgEditor/blob/main/assets/icons/toolbar/clear.png)
 - toggle grid
+![alt text](https://github.com/Teorija/PgEditor/blob/main/assets/icons/toolbar/grid.png)
 - reset map position
+![alt text](https://github.com/Teorija/PgEditor/blob/main/assets/icons/toolbar/reset.png)
 - zoom in
+![alt text](https://github.com/Teorija/PgEditor/blob/main/assets/icons/toolbar/zoom%20in.png)
 - zoom out
+![alt text](https://github.com/Teorija/PgEditor/blob/main/assets/icons/toolbar/zoom%20out.png)
 - scroll
+![alt text](https://github.com/Teorija/PgEditor/blob/main/assets/icons/toolbar/drag.png)
 - add layer
+![alt text](https://github.com/Teorija/PgEditor/blob/main/assets/icons/toolbar/add%20layer.png)
 - delete layer
+![alt text](https://github.com/Teorija/PgEditor/blob/main/assets/icons/toolbar/delete%20layer.png)
 - change layer up
+![alt text](https://github.com/Teorija/PgEditor/blob/main/assets/icons/toolbar/layer%20up.png)
 - change layer down
+![alt text](https://github.com/Teorija/PgEditor/blob/main/assets/icons/toolbar/layer%20down.png)
 
 ### Version 1.0 - To Do List
 
