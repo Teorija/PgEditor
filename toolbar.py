@@ -284,3 +284,17 @@ class EditorToolbar:
                 'current layer': self.current_layer,
                 'layer count': self.layer_count
                }
+    
+    def set_map_name(self, name) -> None:
+        self.map_name = name
+        self.map_name_text = 'map name : ' + self.map_name
+        self.map_name_text_center = self.font.get_center(self.map_name_text)
+
+    def set_map_size(self, size) -> None:
+        self.map_size_w = size[0]
+        self.map_size_h = size[1]
+        self.map_size = str(self.map_size_w) + ' x ' + str(self.map_size_h)
+        self.map_size_text = '/ map size : ' + self.map_size
+
+    def set_layer_count(self, count) -> None:
+        self.layer_count = count

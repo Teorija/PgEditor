@@ -1,19 +1,22 @@
 import pygame as pg
 from tile import Tile
 import json
+from const import COLOURS
 
 class Tilemap:
     def __init__(self, map_size, tile_size) -> None:
+        self.map_name = None
         self.map_size = map_size
         self.tile_size = tile_size
         self.terrain = {}
         self.decorative = {}
 
-    def save_map(self, map_name) -> None:
+    def save_map(self, map_name, map_size, tile_size, layer_count) -> None:
         map_data = {
             'map name': map_name,
-            'map size': self.map_size,
-            'tile size': self.tile_size,
+            'map size': map_size,
+            'tile size': tile_size,
+            'layers': layer_count,
             'terrain': {},
             'decorative': {}
         }
@@ -35,19 +38,27 @@ class Tilemap:
         with open('assets/maps/'+map_name, 'r') as f:
             map_data = json.load(f)
 
+        self.map_name = map_data['map name']
         self.map_size = map_data['map size']
         self.tile_size = map_data['tile size']
+        layer_count = map_data['layers']
 
         for layer in map_data['terrain']:
-            self.terrain[layer] = {}
+            self.terrain[int(layer)] = {}
             for tile_pos in map_data['terrain'][layer]:
-                self.terrain[layer][eval(tile_pos)] = Tile('terrain', eval(tile_pos), map_data['terrain'][layer][tile_pos], pg.image.load('assets/editor assets/terrain/'+map_data['terrain'][layer][tile_pos]+'.png').convert_alpha(), self.tile_size)
+                img = pg.image.load('assets/editor assets/terrain/'+map_data['terrain'][layer][tile_pos]+'.png').convert_alpha()
+                img.set_colorkey(COLOURS['transparent black'])
+                self.terrain[int(layer)][eval(tile_pos)] = Tile('terrain', eval(tile_pos), map_data['terrain'][layer][tile_pos], img, self.tile_size)
 
         for layer in map_data['decorative']:
-            self.decorative[layer] = {}
+            self.decorative[int(layer)] = {}
             for tile_pos in map_data['decorative'][layer]:
-                self.decorative[layer][eval(tile_pos)] = Tile('decorative', eval(tile_pos), map_data['decorative'][layer][tile_pos], pg.image.load('assets/editor assets/decorative/'+map_data['decorative'][layer][tile_pos]+'.png').convert_alpha(), self.tile_size)
-        
+                img = pg.image.load('assets/editor assets/decorative/'+map_data['decorative'][layer][tile_pos]+'.png').convert_alpha()
+                img.set_colorkey(COLOURS['transparent black'])
+                self.decorative[int(layer)][eval(tile_pos)] = Tile('decorative', eval(tile_pos), map_data['decorative'][layer][tile_pos], img, self.tile_size)
+
+        return (self.map_name, self.map_size, self.tile_size, layer_count)
+
     def add_layer(self, layer) -> None:
         self.terrain[layer] = {}
         self.decorative[layer] = {}

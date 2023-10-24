@@ -39,7 +39,7 @@ class EditorMapManager:
         self.current_layer = 0
         self.layer_count = 0
         
-    def update(self, mouse_data, keyboard_data, asset_manager_data, toolbar_data) -> None:
+    def update(self, mouse_data, keyboard_data, asset_manager_data, toolbar_data, toolbar) -> None:
         # update mouse data
         mouse_x = ((mouse_data['pos'][0] - self.blit_pos[0] - self.scroll_offset[0])/self.zoom_scale)//16
         mouse_y = ((mouse_data['pos'][1] - self.blit_pos[1] - self.scroll_offset[1])/self.zoom_scale)//16
@@ -51,7 +51,7 @@ class EditorMapManager:
         self.drawing = toolbar_data['drawing']
         self.erasing = toolbar_data['erasing']
         
-        if self.map_size != toolbar_data['map size']:
+        if self.map_size != toolbar_data['map size'] and not toolbar_data['load status']:
             self.map_size = toolbar_data['map size']
             self.map_surface = pg.Surface((self.map_size[0]*self.tile_size, self.map_size[1]*self.tile_size)).convert()
             self.map.clear_map()
@@ -64,26 +64,32 @@ class EditorMapManager:
         self.update_hud()
 
         # update hud
-        self.update_map(mouse_data, keyboard_data, toolbar_data)
+        self.update_map(mouse_data, keyboard_data, toolbar_data, toolbar)
 
     def update_hud(self) -> None:
         # wipe surface for new frame
         self.hud_surface.fill(COLOURS['transparent black'])
 
-    def update_map(self, mouse_data, keyboard_data, toolbar_data) -> None:
+    def update_map(self, mouse_data, keyboard_data, toolbar_data, toolbar) -> None:
         # wipe surface for new frame
         self.map_surface.fill(COLOURS['red 2'])
 
         # handle map save
         if toolbar_data['save status']:
-            self.map.save_map(toolbar_data['map name'])
+            self.map.save_map(toolbar_data['map name'], toolbar_data['map size'], self.tile_size, toolbar_data['layer count'])
 
         # handle map load
         if toolbar_data['load status']:
             self.choose_map_thread.start()
         
         if self.map_path:
-            self.map.load_map(self.map_path)
+            data = self.map.load_map(self.map_path)
+            self.map_size = data[1]
+            self.tile_size = data[2]
+            toolbar.set_map_name(data[0])
+            toolbar.set_map_size(data[1])
+            toolbar.set_layer_count(data[3])
+            self.map_surface = pg.Surface((self.map_size[0]*self.tile_size, self.map_size[1]*self.tile_size)).convert()
             self.map_path = None
 
         # handle mouse position for drawing/erasing features
