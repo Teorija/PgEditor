@@ -50,7 +50,8 @@ While starting to write my game using Python and PyGame I decided to manage my m
 ### Version 2.0 - Planned Features
 
 - add a selection tool for auto fill, auto tiling, cut, copy and paste
-- add general auto fill tool 
+- add general auto fill tool
+- extend and improve capabilities of current GUI widget library 
 
 ### Version 2.0 - To Do List
 
