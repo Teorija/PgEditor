@@ -48,8 +48,7 @@ While starting to write my game using Python and PyGame I decided to manage my m
 - code cleanup and documentation
 - error handling for incorrect map file selection (non json)
 - add keyboard shortcuts for tool functionality
-- optimize rendering so that a new frame is [Uploading PgEditor Demo.webm…]()
-only rendered if it differs from the previous frame
+- optimize rendering so that a new frame is only rendered if it differs from the previous frame
 - update tilemap rendering so that it only renders what is visible on the screen
 - UI aesthetic overhaul
 
