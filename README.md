@@ -1,5 +1,5 @@
 # PgEditor
-*note : all artwork and assets are drawn personally
+*note : all artwork and assets are drawn personally (all artwork and UI design is subject to change, current UI design is temporary)
 ### Project Intent
 
 After taking a course in computer graphics using OpenGL I kept getting drawn towards the idea of creating a video game, albeit a simple one. However I wasn't intereseted in creating a 3D video game, rather I wanted to create something that reminded me about old flash games I used to play. Although I could create a 2D game using C++ and OpenGL I wanted to practice my python skills. Python has a library called PyGame which is a graphics framework. Since Python has a slower performance than C++ I decided a lower resolution pixel art game would be a good fit to maximize performance. 
