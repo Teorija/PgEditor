@@ -1,0 +1,43 @@
+{
+    "map name": "new map name",
+    "map size": [
+        20,
+        20
+    ],
+    "tile size": 16,
+    "layers": 2,
+    "terrain": {
+        "1": {
+            "(2.0, 11.0)": "red_grass_middle",
+            "(3.0, 11.0)": "red_grass_middle",
+            "(4.0, 11.0)": "red_grass_middle",
+            "(5.0, 11.0)": "red_grass_middle",
+            "(6.0, 11.0)": "red_grass_middle",
+            "(7.0, 11.0)": "red_grass_middle",
+            "(8.0, 11.0)": "red_grass_middle",
+            "(9.0, 11.0)": "red_grass_middle",
+            "(10.0, 11.0)": "red_grass_middle"
+        },
+        "2": {
+            "(10.0, 6.0)": "red_grass_middle",
+            "(11.0, 6.0)": "red_grass_middle",
+            "(12.0, 6.0)": "red_grass_middle",
+            "(13.0, 6.0)": "red_grass_middle",
+            "(14.0, 6.0)": "red_grass_middle",
+            "(14.0, 5.0)": "red_grass_middle",
+            "(15.0, 5.0)": "red_grass_middle",
+            "(16.0, 6.0)": "red_grass_middle",
+            "(17.0, 6.0)": "red_grass_middle",
+            "(15.0, 6.0)": "red_grass_middle"
+        }
+    },
+    "decorative": {
+        "1": {
+            "(2.0, 8.0)": "tree",
+            "(7.0, 8.0)": "tree"
+        },
+        "2": {
+            "(11.0, 3.0)": "tree"
+        }
+    }
+}

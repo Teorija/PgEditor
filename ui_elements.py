@@ -2,6 +2,11 @@ from const import COLOURS
 import pygame as pg
 from utils import load_images
 
+# To Do
+# improve and update base class for widgets (e.g. add more attributes, methods, etc...)
+# extend capability of widget creation (e.g. placing widgets in a grid, placing widgets directionaly, padding, margin, etc...)
+# add more widgets (e.g. drop down, check box, etc...)
+
 class PgUiElement:
     def __init__(self, size, pos, surface) -> None:
         self.size = size

@@ -3,6 +3,9 @@ from tile import Tile
 import json
 from const import COLOURS
 
+# To Do
+# update tilemap to include more asset types, e.g. entities, lights, particles, etc...
+
 class Tilemap:
     def __init__(self, map_size, tile_size) -> None:
         self.map_name = None
