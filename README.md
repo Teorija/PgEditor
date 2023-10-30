@@ -5,6 +5,10 @@ After taking a course in computer graphics using OpenGL I kept getting drawn tow
 
 While starting to write my game using Python and PyGame I decided to manage my maps using a tile based system. When I was writting the code to describe the map I came to the realization that hard coding the map would be tedious and time consuming. This lead me to develop my first sub-project for the game, a map maker/level editor. 
 
+### Usage 
+
+[Screencast from 2023-10-30 04:09:25 PM.webm](https://github.com/Teorija/PgEditor/assets/81877767/3175e8f0-41b1-46ef-9d6c-47940c3d6dce)
+
 ### Version 1.0 - Current Features
 
 - create new map
@@ -43,7 +47,8 @@ While starting to write my game using Python and PyGame I decided to manage my m
 - code cleanup and documentation
 - error handling for incorrect map file selection (non json)
 - add keyboard shortcuts for tool functionality
-- optimize rendering so that a new frame is only rendered if it differs from the previous frame
+- optimize rendering so that a new frame is [Uploading PgEditor Demo.webm…]()
+only rendered if it differs from the previous frame
 - update tilemap rendering so that it only renders what is visible on the screen
 - UI aesthetic overhaul
 
